@@ -6,15 +6,15 @@
    * -------------------------------------------*/
 const DATA = {
 nodes: [
-    { id: 'CALC1', name: 'Calculus I', semester: 1, area: 'Core Math' },
-    { id: 'ALG',   name: 'Linear Algebra', semester: 1, area: 'Core Math' },
-    { id: 'PHY1',  name: 'Physics I', semester: 1, area: 'Physics' },
-    { id: 'PROG1', name: 'Programming I', semester: 1, area: 'Programming' },
-    { id: 'CALC2', name: 'Calculus II', semester: 2, area: 'Core Math' },
-    { id: 'PHY2',  name: 'Physics II', semester: 2, area: 'Physics' },
-    { id: 'DS',    name: 'Data Structures', semester: 2, area: 'Programming' },
-    { id: 'DIFEQ', name: 'Differential Equations', semester: 3, area: 'Core Math' },
-    { id: 'STAT',  name: 'Probability & Statistics', semester: 3, area: 'Core Math' },
+    { id: 'C1', name: 'Cálculo I', semester: 1, area: 'Matemática' },
+    { id: 'ALG',   name: 'Álgebra Linear', semester: 1, area: 'Matemática' },
+    { id: 'PHY1',  name: 'Física I', semester: 1, area: 'Physics' },
+    { id: 'PROG1', name: 'Algoritmos e Programação de Computadores', semester: 1, area: 'Programming' },
+    { id: 'C2', name: 'Cálculo II', semester: 2, area: 'Matemática' },
+    { id: 'PHY2',  name: 'Física II', semester: 3, area: 'Physics' },
+    { id: 'DS',    name: 'Estrutura de Dados', semester: 2, area: 'Programming' },
+    { id: 'DIFEQ', name: 'Differential Equations', semester: 3, area: 'Matemática' },
+    { id: 'STAT',  name: 'Probability & Statistics', semester: 3, area: 'Matemática' },
     { id: 'ELEC1', name: 'Circuits I', semester: 3, area: 'Electrical' },
     { id: 'MECH1', name: 'Statics', semester: 3, area: 'Mechanics' },
     { id: 'ELEC2', name: 'Circuits II', semester: 4, area: 'Electrical' },
@@ -30,12 +30,12 @@ nodes: [
     { id: 'CAP',   name: 'Capstone Project', semester: 8, area: 'Other' },
 ],
 links: [
-    { source:'CALC1', target:'CALC2' },
-    { source:'CALC2', target:'DIFEQ' },
-    { source:'CALC2', target:'STAT' },
+    { source:'C1', target:'C2' },
+    { source:'C2', target:'DIFEQ' },
+    { source:'C2', target:'STAT' },
     { source:'PHY1',  target:'PHY2' },
     { source:'PROG1', target:'DS' },
-    { source:'CALC2', target:'ELEC1' },
+    { source:'C2', target:'ELEC1' },
     { source:'PHY2',  target:'ELEC1' },
     { source:'ELEC1', target:'ELEC2' },
     { source:'ELEC2', target:'SIGN' },
@@ -74,7 +74,7 @@ const gLabels = gRoot.append('g').attr('class','labels');
 const tooltip = d3.select('#tooltip');
 
 const color = d3.scaleOrdinal()
-.domain(['Core Math','Physics','Programming','Electrical','Mechanics','Labs','Other'])
+.domain(['Matemática','Physics','Programming','Electrical','Mechanics','Labs','Other'])
 .range(['#a0b7ff','#9ce1ff','#a2f2c3','#ffd08a','#f49fbf','#c1b4ff','#c2d0ff']);
 
 // Build indices and degrees
@@ -121,6 +121,31 @@ g.append('circle')
 g.append('title').text(d=>d.name);
 return g;
 });
+
+node.call(d3.drag()
+    .on('start', dragstarted)
+    .on('drag', dragged)
+    .on('end', dragended));
+
+// Função executada quando o arrasto de um nó começa
+function dragstarted(event, d) {
+  if (!event.active) sim.alphaTarget(0.3).restart(); // "Aquece" e reinicia a simulação
+  d.fx = d.x; // Fixa a posição X do nó
+  d.fy = d.y; // Fixa a posição Y do nó
+}
+
+// Função executada enquanto o nó está sendo arrastado
+function dragged(event, d) {
+  d.fx = event.x; // Atualiza a posição X fixa para a posição do mouse
+  d.fy = event.y; // Atualiza a posição Y fixa para a posição do mouse
+}
+
+// Função executada quando o arrasto de um nó termina
+function dragended(event, d) {
+  if (!event.active) sim.alphaTarget(0); // "Esfria" a simulação
+  d.fx = null; // Libera a posição fixa do nó
+  d.fy = null; // Libera a posição fixa do nó
+}
 
 const labels = gLabels.selectAll('text').data(DATA.nodes).join('text')
 .attr('font-size', 12)
