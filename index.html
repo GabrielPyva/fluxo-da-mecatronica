@@ -3,75 +3,76 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Engineering Course Dependency Graph</title>
+  <title>Grafo de Dependências</title>
   <!-- D3 (via CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <aside>
-    <h1>Course Dependency Graph</h1>
-    <div class="sub">Interactive, animated prerequisite map. Search, filter, and explore chains.</div>
+    <h1>Engenharia Mecatrônica - UnB</h1>
+    <div class="sub">Mapa interativo e animado de pré-requisitos. Pesquise, filtre e explore cadeias.</div>
+    <div class="sub">ATENÇÃO: Este aplicativo está com os dados do currículo mais recente do curso, ou seja, a grade curricular de 2022.</div>
 
     <div class="card">
       <div class="row" style="gap:8px">
-        <input id="search" type="text" placeholder="Search course (e.g., Calculus I)" />
+        <input id="search" type="text" placeholder="Pesquise um curso (Ex.: Cálculo I)" />
         <button id="btn-search" class="btn" title="Focus search result">🔎</button>
       </div>
-      <div class="note" style="margin-top:8px">Tip: Click a node to focus its neighbors. Double‑click empty space to reset. Scroll to zoom. Drag to pan.</div>
+      <div class="note" style="margin-top:8px">Dica: Clique em uma matéria para focar suas vizinhas. Clique duas vezes no espaço vazio para redefinir. Role para ampliar. Clique e arraste para mover.</div>
     </div>
 
     <div class="card">
       <div class="row" style="justify-content:space-between; margin-bottom:8px">
-        <div class="chip" title="Estimated suggested term"><b>Semester</b></div>
-        <div class="chip" title="Total nodes">Nodes: <span id="nodeCount">0</span></div>
+        <div class="chip" title="Estimated suggested term"><b>Semestre</b></div>
+        <div class="chip" title="Total nodes">Matérias: <span id="nodeCount">0</span></div>
       </div>
       <div class="slider-row" style="margin-top:4px">
-        <label for="depth">Show chain depth</label>
+        <label for="depth">Profundidade</label>
         <input id="depth" type="range" min="1" max="8" value="3" />
         <span id="depthVal" class="chip">3</span>
       </div>
       <div class="row" style="margin-top:8px; gap:8px">
-        <button id="btn-prereq" class="btn group" title="Show prerequisites chain">⬅ Prereqs</button>
-        <button id="btn-depend" class="btn group" title="Show dependents chain">Dependents ➡</button>
+        <button id="btn-prereq" class="btn group" title="Mostrar cadeia de pré-requisitos">⬅ Pré-requisitos</button>
+        <button id="btn-depend" class="btn group" title="Mostrar cadeia de dependentes">Dependentes ➡</button>
       </div>
       <div class="row" style="margin-top:8px; gap:8px">
-        <button id="btn-neighbors" class="btn group" title="Neighbors (1 hop)">Neighbors</button>
-        <button id="btn-showAll" class="btn group" title="Show all">Show All</button>
+        <button id="btn-neighbors" class="btn group" title="Vizinhos (1 hop)">Relações Diretas</button>
+        <button id="btn-showAll" class="btn group" title="Mostrar Tudo">Redefinir</button>
       </div>
       <div class="row" style="margin-top:8px; gap:8px">
-        <button id="btn-organize-sem" class="btn group" title="Organize by Semester">Organize by Semester</button>
+        <button id="btn-organize-sem" class="btn group" title="Organizar por Semestres">Organizar por Semestres</button>
       </div>
       <div class="row toggle" style="margin-top:10px">
         <input type="checkbox" id="chk-isolate" />
-        <label for="chk-isolate">Isolate filtered nodes</label>
+        <label for="chk-isolate">Isolatar matérias filtradas</label>
       </div>
       <div class="row toggle" style="margin-top:6px">
         <input type="checkbox" id="chk-labels" checked />
-        <label for="chk-labels">Show labels</label>
+        <label for="chk-labels">Mostrar nomes</label>
       </div>
       <div class="row toggle" style="margin-top:6px">
         <input type="checkbox" id="chk-arrows" checked />
-        <label for="chk-arrows">Show arrows (prereq → course)</label>
+        <label for="chk-arrows">Mostrar setas (pré-requisitos → dependentes)</label>
       </div>
       <div class="row toggle" style="margin-top:6px">
         <input type="checkbox" id="chk-collide" checked />
-        <label for="chk-collide">Collision avoidance</label>
+        <label for="chk-collide">Prevenção de colisões</label>
       </div>
     </div>
 
     <div class="card">
-      <div style="font-weight:700; margin-bottom:6px">Legend</div>
+      <div style="font-weight:700; margin-bottom:6px">Departamentos</div>
       <div class="legend">
-        <span class="chip">Core Math</span>
-        <span class="chip">Physics</span>
-        <span class="chip">Programming</span>
-        <span class="chip">Electrical</span>
-        <span class="chip">Mechanics</span>
-        <span class="chip">Labs</span>
-        <span class="chip">Other</span>
+        <span class="chip">Matemática</span>
+        <span class="chip">Ciência da Computação</span>
+        <span class="chip">Física</span>
+        <span class="chip">Engenharia Elétrica</span>
+        <span class="chip">Química</span>
+        <span class="chip">Engenharia Mecânica</span>
+        <span class="chip">Outros</span>
       </div>
-      <div class="note" style="margin-top:8px">Colors encode areas; outline thickness suggests in‑degree (how many courses depend on it).</div>
+      <div class="note" style="margin-top:8px">Cores representam departamentos; outline thickness suggests in‑degree (how many courses depend on it).</div>
     </div>
 
     <div class="footer">Replace the <span class="kbd">DATA</span> section in the code with your full curriculum.
@@ -81,10 +82,10 @@
     <svg id="graph"></svg>
     <div class="tooltip" id="tooltip"></div>
     <div class="floating-bar">
-      <span class="kbd">Click</span>
-      <span class="kbd">Drag</span>
-      <span class="kbd">Wheel = Zoom</span>
-      <span class="kbd">Double‑click = Reset</span>
+      <span class="kbd">Clique</span>
+      <span class="kbd">Arraste</span>
+      <span class="kbd">Scroll = Zoom</span>
+      <span class="kbd">Duplo‑clique = Reset</span>
     </div>
   </main>
 
