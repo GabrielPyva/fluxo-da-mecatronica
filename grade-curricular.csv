@@ -2,8 +2,8 @@ semester,name,id,credits,prerequisites,area
 1,Cálculo 1,MAT0025,6,,Core Math
 1,Introdução à Álgebra Linear,MAT0031,4,,Core Math
 1,Algoritmos e Programação de Computadores,CIC0004,6,,Computação
-1,Química Geral Teórica,IQD0125,4,,Core Math
-1,Química Geral Experimental,IQD0126,2,,Core Math
+1,Química Geral Teórica,IQD0125,4,,Química
+1,Química Geral Experimental,IQD0126,2,,Química
 1,Introdução à Engenharia Mecatrônica,FTD0021,2,,Outro
 2,Cálculo 2,MAT0026,6,MAT0025,Core Math
 2,Física 1,IFD0171,4,,Física

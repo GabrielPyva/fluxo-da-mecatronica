@@ -61,8 +61,8 @@ function initializeGraph(DATA) {
   const tooltip = d3.select('#tooltip');
 
   const color = d3.scaleOrdinal()
-    .domain(['Core Math','Physics','Programming','Electrical','Mechanics','Labs','Other', 'Default', 'General'])
-    .range(['#a0b7ff','#9ce1ff','#a2f2c3','#ffd08a','#f49fbf','#c1b4ff','#c2d0ff', '#aaaaaa', '#bbbbbb']);
+    .domain(['Core Math','Física','Computação','Elétrica','Mecânica','Química','Outro', 'Default', 'General'])
+    .range(['#2dff61ff','#ff9100ff','#008cffff','#ae00ffff','#ff0000ff','#fffb00ff','#c2d0ff', '#aaaaaa', '#bbbbbb']);
 
   // Build indices and degrees
   const idToNode = new Map(DATA.nodes.map(d=>[d.id, d]));
@@ -144,8 +144,8 @@ function initializeGraph(DATA) {
   calculateGridPositions(DATA.nodes);
 
   function calculateGridPositions(nodes) {
-      const colWidth = 180;
-      const rowHeight = 100;
+      const colWidth = 280;
+      const rowHeight = 150;
       const nodesBySemester = d3.group(nodes, d => d.semester);
 
       nodesBySemester.forEach((nodesInSemester, semester) => {
