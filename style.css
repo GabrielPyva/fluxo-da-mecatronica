@@ -1,0 +1,77 @@
+:root{
+      --bg: #0b1020;
+      --panel: #0f152b;
+      --panel-2: #131a36;
+      --text: #e8ecff;
+      --muted: #9aa3c7;
+      --accent: #7aa2ff;
+      --accent-2: #4dd0e1;
+      --ok: #74d99f;
+      --warn: #ffd166;
+      --danger: #ff6b6b;
+      --link: #98a8ff;
+    }
+
+    * { box-sizing: border-box; }
+    body{
+      margin:0; height:100vh; display:grid; grid-template-columns: 340px 1fr; grid-template-rows: 1fr;
+      background: radial-gradient(1200px 800px at 70% 20%, #17224d 0%, var(--bg) 55%);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    /* Sidebar */
+    aside{
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border-right: 1px solid rgba(255,255,255,.06);
+      padding: 18px 18px 14px;
+      overflow:auto;
+    }
+    h1{ font-size: 20px; margin: 0 0 12px; letter-spacing:.2px; }
+    .sub{ color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+
+    .card{ background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 12px; margin-bottom: 12px; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    .row{ display:flex; gap:10px; align-items:center; }
+    label{ font-size: 12px; color: var(--muted); }
+    input[type="text"], select{
+      width:100%; border-radius: 12px; border:1px solid rgba(255,255,255,.12); background:#0c1230; color: var(--text); padding:10px 12px; outline:none;
+      transition: border-color .2s ease, box-shadow .2s ease; font-size: 14px;
+    }
+    input[type="text"]:focus{ border-color: var(--accent); box-shadow: 0 0 0 4px rgba(122,162,255,.12); }
+
+    .btn{ display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(255,255,255,.12); background: #0c1230; color: var(--text);
+      padding: 9px 12px; border-radius: 12px; cursor:pointer; font-weight: 600; font-size: 13px; transition: transform .06s ease, background .2s ease, border-color .2s ease; }
+    .btn:hover{ background:#0f1741; border-color: rgba(255,255,255,.2); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{ background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); color:#0a0f24; border: none; }
+    .btn.group{ width:100%; justify-content:center; }
+
+    .chip{ display:inline-flex; align-items:center; gap:6px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); padding: 4px 8px; border-radius: 999px; font-size:12px; }
+
+    .legend{ display:flex; flex-wrap:wrap; gap:8px; }
+
+    .slider-row{ display:flex; align-items:center; gap:10px; }
+    input[type="range"]{ width:100%; }
+
+    .toggle{ display:flex; gap:8px; align-items:center; }
+    .toggle input{ width: 36px; height: 18px; appearance: none; background: #11173b; border-radius: 999px; position: relative; outline: none; border:1px solid rgba(255,255,255,.14); cursor:pointer; }
+    .toggle input::after{ content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; background:#fff; border-radius:50%; transition: transform .18s ease; }
+    .toggle input:checked{ background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); }
+    .toggle input:checked::after{ transform: translateX(18px); }
+
+    /* Graph area */
+    main{ position: relative; }
+    #graph{
+      width:100%; height:100%; cursor: grab; user-select: none;
+    }
+    #graph:active{ cursor: grabbing; }
+
+    .tooltip{ position: absolute; pointer-events:none; background: #0b0f25; border:1px solid rgba(255,255,255,.14); color: var(--text); padding:8px 10px; border-radius:10px; font-size:12px; box-shadow: 0 10px 24px rgba(0,0,0,.4); opacity:0; transform: translateY(6px); transition: opacity .12s ease, transform .12s ease; }
+
+    .floating-bar{ position:absolute; left: 16px; bottom: 16px; display:flex; gap:8px; }
+
+    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); border-bottom-width:2px; padding:2px 6px; border-radius:6px; font-size:12px; color: var(--muted); }
+
+    .note{ font-size: 11px; color: var(--muted); line-height: 1.35; }
+
+    .footer{ font-size: 11px; color: var(--muted); text-align:center; margin-top:6px; }
