@@ -42,11 +42,8 @@ function processData(csvData) {
 }
 
 
-// Função que contém toda a lógica original para desenhar e controlar o grafo
+// Função que contém toda a lógica para desenhar e controlar o grafo
 function initializeGraph(DATA) {
-  /* ---------------------------------------------
-  * A partir daqui, é o seu código original, colado dentro desta função.
-  * -------------------------------------------*/
 
   /* ---------------------------------------------
   * Graph Setup
@@ -55,19 +52,17 @@ function initializeGraph(DATA) {
   const width = () => svg.node().clientWidth;
   const height = () => svg.node().clientHeight;
 
-  const defs = svg.append('defs');
-
   const gRoot = svg.append('g');
   const gLinks = gRoot.append('g').attr('class','links');
+  const gArrowheads = gRoot.append('g').attr('class', 'arrowheads');
   const gNodes = gRoot.append('g').attr('class','nodes');
   const gLabels = gRoot.append('g').attr('class','labels');
-  const gArrowheads = gRoot.append('g').attr('class', 'arrowheads');
 
   const tooltip = d3.select('#tooltip');
 
   const color = d3.scaleOrdinal()
-    .domain(['Core Math','Física','Computação','Elétrica','Mecânica','Outro'])
-    .range(['#00ff37ff','#ffc400ff','#00ccffff','#c000faff','#ff0000ff','#e4eaffff']);
+    .domain(['Core Math','Physics','Programming','Electrical','Mechanics','Labs','Other', 'Default', 'General'])
+    .range(['#a0b7ff','#9ce1ff','#a2f2c3','#ffd08a','#f49fbf','#c1b4ff','#c2d0ff', '#aaaaaa', '#bbbbbb']);
 
   // Build indices and degrees
   const idToNode = new Map(DATA.nodes.map(d=>[d.id, d]));
@@ -80,28 +75,34 @@ function initializeGraph(DATA) {
 
   // Force simulation
   const sim = d3.forceSimulation(DATA.nodes)
-    .force('link', d3.forceLink(DATA.links).id(d=>d.id).distance(68).strength(0.13))
-    .force('charge', d3.forceManyBody().strength(-140))
+    .force('link', d3.forceLink(DATA.links).id(d=>d.id).distance(100).strength(0.13))
+    .force('charge', d3.forceManyBody().strength(-250))
     .force('center', d3.forceCenter(0,0))
-    .force('x', d3.forceX(d=> (d.semester? (d.semester-1) : 0) * 120).strength(.05))
-    .force('y', d3.forceY(d=> level.get(d.id)*90).strength(.2))
-    .force('collide', d3.forceCollide(22));
+    .force('x', d3.forceX().strength(0.05))
+    .force('y', d3.forceY().strength(0.2))
+    .force('collide', d3.forceCollide(30));
+
+  let isOrganized = false; // Variável para controlar o estado do grid
 
   // Zoom/pan
   svg.call(d3.zoom().scaleExtent([.25, 3]).on('zoom', (ev)=>{
     gRoot.attr('transform', ev.transform);
   }));
 
-  // Arrow toggle
   let showArrows = true;
 
-  // Links
   const link = gLinks.selectAll('path').data(DATA.links).join('path')
     .attr('stroke', 'rgba(255,255,255,.25)')
     .attr('fill', 'none')
     .attr('stroke-width', 1.4);
+  
+  const arrowheads = gArrowheads.selectAll('path.arrowhead')
+    .data(DATA.links)
+    .join('path')
+    .attr('class', 'arrowhead')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', 'rgba(255,255,255,.6)');
 
-  // Nodes
   const node = gNodes.selectAll('g.node').data(DATA.nodes).join(enter=>{
     const g = enter.append('g').attr('class','node').style('cursor','pointer');
     g.append('circle')
@@ -113,28 +114,6 @@ function initializeGraph(DATA) {
     return g;
   });
 
-  // Drag and drop functionality
-  node.call(d3.drag()
-      .on('start', dragstarted)
-      .on('drag', dragged)
-      .on('end', dragended));
-
-  function dragstarted(event, d) {
-    if (!event.active) sim.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-  function dragged(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-  function dragended(event, d) {
-    if (!event.active) sim.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-
-
   const labels = gLabels.selectAll('text').data(DATA.nodes).join('text')
     .attr('font-size', 12)
     .attr('fill', 'rgba(255,255,255,.92)')
@@ -144,37 +123,112 @@ function initializeGraph(DATA) {
     .attr('text-anchor','middle')
     .text(d=>d.name);
 
-  const arrowheads = gArrowheads.selectAll('path.arrowhead')
-    .data(DATA.links)
-    .join('path')
-    .attr('class', 'arrowhead')
-    .attr('d', 'M0,-5L10,0L0,5') // Desenha o formato de triângulo da seta
-    .attr('fill', 'rgba(255,255,255,.6)');
-
   sim.on('tick', ticked);
 
   function ticked(){
     link.attr('d', d => `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`);
     node.attr('transform', d=> `translate(${d.x},${d.y})`);
     labels.attr('x', d=>d.x).attr('y', d=>d.y-16);
-
     arrowheads.attr('transform', d => {
-        // Calcula o ponto médio da aresta
         const midX = (d.source.x + d.target.x) / 2;
         const midY = (d.source.y + d.target.y) / 2;
-        
-        // Calcula o ângulo da aresta
         const angle = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x) * (180 / Math.PI);
-        
-        // Aplica a translação e rotação na seta
         return `translate(${midX}, ${midY}) rotate(${angle})`;
     });
   }
 
-  
+  // NOVA LÓGICA DE GRID E DRAG & DROP
+  // ===================================
 
-  // Fit & reset
+  // Calcula e armazena as posições do grid para cada nó
+  calculateGridPositions(DATA.nodes);
+
+  function calculateGridPositions(nodes) {
+      const colWidth = 180;
+      const rowHeight = 100;
+      const nodesBySemester = d3.group(nodes, d => d.semester);
+
+      nodesBySemester.forEach((nodesInSemester, semester) => {
+          const colIndex = semester - 1;
+          const numRows = nodesInSemester.length;
+          nodesInSemester.forEach((node, rowIndex) => {
+              node.gridX = colIndex * colWidth;
+              // Centraliza a coluna de nós verticalmente
+              node.gridY = (rowIndex - (numRows - 1) / 2) * rowHeight;
+          });
+      });
+  }
+
+  // Funções de Drag & Drop atualizadas
+  node.call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended));
+
+  function dragstarted(event, d) {
+    if (!event.active) sim.alphaTarget(0.3).restart();
+    // Se não estiver no modo grid, fixe a posição atual
+    if (!isOrganized) {
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+  }
+  
+  function dragged(event, d) {
+    // Permite arrastar livremente, definindo fx e fy para a posição do mouse
+    d.fx = event.x;
+    d.fy = event.y;
+  }
+  
+  function dragended(event, d) {
+    if (!event.active) sim.alphaTarget(0);
+    if (isOrganized) {
+        // Se estiver no modo grid, o nó volta para sua posição no grid
+        d.fx = d.gridX;
+        d.fy = d.gridY;
+    } else {
+        // Se não estiver no modo grid, libera o nó
+        d.fx = null;
+        d.fy = null;
+    }
+  }
+
+  // Controles
+  d3.select('#btn-organize-sem').on('click', () => {
+      isOrganized = !isOrganized;
+
+      if (isOrganized) {
+          // LIGA O MODO GRID
+          sim.alphaTarget(0.3).restart();
+          DATA.nodes.forEach(d => {
+              d.fx = d.gridX;
+              d.fy = d.gridY;
+          });
+      } else {
+          // DESLIGA O MODO GRID
+          sim.alphaTarget(0.3).restart();
+          DATA.nodes.forEach(d => {
+              d.fx = null;
+              d.fy = null;
+          });
+      }
+  });
+
+
+  // ===================================
+  // FIM DA NOVA LÓGICA
+
   function resetView(){
+    isOrganized = false; // Garante que o modo grid seja desativado
+
+    // Libera todos os nós da posição fixa
+    DATA.nodes.forEach(d => {
+        d.fx = null;
+        d.fy = null;
+    });
+
+    sim.alpha(1).restart();
+
     const t = d3.zoomIdentity.translate(width()/2, height()/2).scale(1).translate(0,0);
     svg.transition().duration(500).call(d3.zoom().transform, t);
     setOpacity(DATA.nodes.map(d=>d.id));
@@ -211,7 +265,7 @@ function initializeGraph(DATA) {
   });
   d3.select('#search').on('keydown', (ev)=>{ if(ev.key==='Enter') d3.select('#btn-search').dispatch('click'); });
 
-  // Controls
+  // Outros Controles
   d3.select('#chk-labels').on('change', function(){
     const vis = this.checked ? 1 : 0; labels.transition().duration(250).style('opacity', vis);
   });
@@ -236,7 +290,7 @@ function initializeGraph(DATA) {
   d3.select('#btn-depend').on('click', ()=>{
     if(!focusedId) return; showChain(focusedId, 'down', +depthInput.property('value'));
   });
-  d3.select('#btn-showAll').on('click', ()=>{ focusedId=null; setOpacity(DATA.nodes.map(d=>d.id)); });
+  d3.select('#btn-showAll').on('click', ()=>{ focusedId=null; resetView(); });
 
   // Isolate toggle: hide others vs fade
   function setOpacity(visibleIds){
@@ -246,12 +300,10 @@ function initializeGraph(DATA) {
     node.transition().duration(dur).style('opacity', n=> vis.has(n.id) ? 1 : (isolate? 0 : .12));
     labels.transition().duration(dur).style('opacity', n=> vis.has(n.id) ? 1 : (isolate? 0 : .12));
     link.transition().duration(dur).style('opacity', l=> (vis.has(l.source.id) && vis.has(l.target.id)) ? .9 : (isolate? 0 : .06));
-
     arrowheads.transition().duration(dur).style('opacity', l=> (vis.has(l.source.id) && vis.has(l.target.id)) ? .9 : (isolate? 0 : .06));
   }
 
   function animateFocus(target){
-    // gentle zoom towards the target
     const t = d3.zoomTransform(svg.node());
     const k = Math.min(2.2, Math.max(1.2, t.k*1.2));
     const dx = width()/2 - target.x*t.k - t.x;
@@ -261,11 +313,10 @@ function initializeGraph(DATA) {
   }
 
   function neighborsOf(id){
-    // A simulação do D3 converte os links para usar objetos, então acessamos .id
     const pred = DATA.links.filter(l=>l.target.id===id).map(l=>l.source.id);
     const succ = DATA.links.filter(l=>l.source.id===id).map(l=>l.target.id);
     return { pred:new Set(pred), succ:new Set(succ) };
-}
+  }
 
   function highlightNeighbors(id){
     const {pred, succ} = neighborsOf(id);
@@ -284,7 +335,6 @@ function initializeGraph(DATA) {
         const next = new Set();
         for(const v of frontier){
             for(const l of DATA.links){
-                // A simulação do D3 converte os links para usar objetos, então acessamos .id
                 if(dir==='up' && l.target.id===v && !visited.has(l.source.id)) {
                     next.add(l.source.id);
                 }
@@ -298,13 +348,11 @@ function initializeGraph(DATA) {
         if(next.size===0) break;
     }
     setOpacity([...visited]);
-}
+  }
 
-  // Helpers
   function computeLevels(nodes, links){
     const adjIn = new Map(nodes.map(n=>[n.id, []]));
     links.forEach(l=>{
-        // Garante que adjIn.get(l.target) exista antes de dar push
         if (!adjIn.has(l.target)) adjIn.set(l.target, []);
         adjIn.get(l.target).push(l.source);
     });
@@ -330,13 +378,12 @@ function initializeGraph(DATA) {
         if(!preds || preds.length===0) {
             level.set(v, 0);
         } else {
-            // A CORREÇÃO PRINCIPAL ESTÁ AQUI: p é uma string (ID), então usamos level.get(p)
             const maxLevel = Math.max(...preds.map(p => level.get(p) + 1));
             level.set(v, maxLevel);
         }
     }
     return level;
-}
+  }
 
   // Initial state
   d3.select('#nodeCount').text(DATA.nodes.length);
