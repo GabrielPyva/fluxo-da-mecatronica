@@ -56,12 +56,12 @@ function initializeGraph(DATA) {
   const height = () => svg.node().clientHeight;
 
   const defs = svg.append('defs');
-  createArrows();
 
   const gRoot = svg.append('g');
   const gLinks = gRoot.append('g').attr('class','links');
   const gNodes = gRoot.append('g').attr('class','nodes');
   const gLabels = gRoot.append('g').attr('class','labels');
+  const gArrowheads = gRoot.append('g').attr('class', 'arrowheads');
 
   const tooltip = d3.select('#tooltip');
 
@@ -99,7 +99,6 @@ function initializeGraph(DATA) {
   const link = gLinks.selectAll('path').data(DATA.links).join('path')
     .attr('stroke', 'rgba(255,255,255,.25)')
     .attr('fill', 'none')
-    .attr('marker-end', showArrows ? 'url(#arrow)' : null)
     .attr('stroke-width', 1.4);
 
   // Nodes
@@ -145,25 +144,34 @@ function initializeGraph(DATA) {
     .attr('text-anchor','middle')
     .text(d=>d.name);
 
+  const arrowheads = gArrowheads.selectAll('path.arrowhead')
+    .data(DATA.links)
+    .join('path')
+    .attr('class', 'arrowhead')
+    .attr('d', 'M0,-5L10,0L0,5') // Desenha o formato de triângulo da seta
+    .attr('fill', 'rgba(255,255,255,.6)');
+
   sim.on('tick', ticked);
 
   function ticked(){
     link.attr('d', d => `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`);
     node.attr('transform', d=> `translate(${d.x},${d.y})`);
     labels.attr('x', d=>d.x).attr('y', d=>d.y-16);
+
+    arrowheads.attr('transform', d => {
+        // Calcula o ponto médio da aresta
+        const midX = (d.source.x + d.target.x) / 2;
+        const midY = (d.source.y + d.target.y) / 2;
+        
+        // Calcula o ângulo da aresta
+        const angle = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x) * (180 / Math.PI);
+        
+        // Aplica a translação e rotação na seta
+        return `translate(${midX}, ${midY}) rotate(${angle})`;
+    });
   }
 
-  function createArrows(){
-    const m = defs.append('marker')
-        .attr('id','arrow')
-        .attr('viewBox','0 -5 10 10')
-        .attr('refX', 18)
-        .attr('refY', 0)
-        .attr('markerWidth', 6)
-        .attr('markerHeight', 6)
-        .attr('orient','auto');
-    m.append('path').attr('d','M0,-5L10,0L0,5').attr('fill','rgba(255,255,255,.6)');
-  }
+  
 
   // Fit & reset
   function resetView(){
@@ -208,7 +216,8 @@ function initializeGraph(DATA) {
     const vis = this.checked ? 1 : 0; labels.transition().duration(250).style('opacity', vis);
   });
   d3.select('#chk-arrows').on('change', function(){
-    showArrows = this.checked; link.attr('marker-end', showArrows ? 'url(#arrow)' : null);
+    showArrows = this.checked;
+    arrowheads.style('display', this.checked ? 'block' : 'none');
   });
   d3.select('#chk-collide').on('change', function(){
     sim.force('collide', this.checked ? d3.forceCollide(22) : null).alpha(0.6).restart();
@@ -237,6 +246,8 @@ function initializeGraph(DATA) {
     node.transition().duration(dur).style('opacity', n=> vis.has(n.id) ? 1 : (isolate? 0 : .12));
     labels.transition().duration(dur).style('opacity', n=> vis.has(n.id) ? 1 : (isolate? 0 : .12));
     link.transition().duration(dur).style('opacity', l=> (vis.has(l.source.id) && vis.has(l.target.id)) ? .9 : (isolate? 0 : .06));
+
+    arrowheads.transition().duration(dur).style('opacity', l=> (vis.has(l.source.id) && vis.has(l.target.id)) ? .9 : (isolate? 0 : .06));
   }
 
   function animateFocus(target){
