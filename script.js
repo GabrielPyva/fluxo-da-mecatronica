@@ -1,6 +1,6 @@
 // Função principal que carrega os dados e inicializa o grafo
 async function setupGraph() {
-  const data = await d3.csv("dados_materias.csv");
+  const data = await d3.csv("grade-curricular.csv");
   const DATA = processData(data);
   initializeGraph(DATA);
 }
