@@ -1,0 +1,23 @@
+id,name,semester,area,prerequisites
+CALC1,Calculus I,1,Core Math,
+ALG,Linear Algebra,1,Core Math,
+PHY1,Physics I,1,Physics,
+PROG1,Programming I,1,Programming,
+CALC2,Calculus II,2,Core Math,CALC1
+PHY2,Physics II,2,Physics,PHY1
+DS,Data Structures,2,Programming,PROG1
+DIFEQ,Differential Equations,3,Core Math,CALC2
+STAT,Probability & Statistics,3,Core Math,CALC2
+ELEC1,Circuits I,3,Electrical,"CALC2,PHY2"
+MECH1,Statics,3,Mechanics,PHY1
+ELEC2,Circuits II,4,Electrical,ELEC1
+SIGN,Signals & Systems,4,Electrical,"ELEC2,DIFEQ"
+MECH2,Dynamics,4,Mechanics,MECH1
+CTRL,Control Systems,5,Electrical,"SIGN,ELEC2"
+THERM,Thermodynamics,5,Mechanics,
+EMAG,Electromagnetics,5,Electrical,ELEC2
+LAB1,Electronics Lab,5,Labs,ELEC2
+EMBED,Embedded Systems,6,Programming,DS
+DSP,Digital Signal Processing,6,Electrical,SIGN
+ROBO,Intro to Robotics,7,Other,"CTRL,EMBED"
+CAP,Capstone Project,8,Other,"ROBO,LAB1,STAT"
