@@ -1,0 +1,57 @@
+Semestre,Componente Curricular,Código do componente,Carga horária,Pré-requisitos
+1,Cálculo 1,MAT0025,6,
+1,Introdução à Álgebra Linear,MAT0031,4,
+1,Algoritmos e Programação de Computadores,CIC0004,6,
+1,Química Geral Teórica,IQD0125,4,
+1,Química Geral Experimental,IQD0126,2,
+1,Introdução à Engenharia Mecatrônica,FTD0021,2,
+2,Cálculo 2,MAT0026,6,MAT0025
+2,Física 1,IFD0171,4,
+2,Física 1 Experimental,IFD0173,2,
+2,Probabilidade e Estatística,EST0023,4,MAT0025
+2,Desenho Mecânico para Engenharia,ENM0190,4,
+2,Estruturas de Dados,CIC0090,4,CIC0004
+2,Impactos Sociais da Tecnologia,FTD0018,2,
+3,Cálculo 3,MAT0027,6,MAT0026
+3,Física 2,IFD0175,4,MAT0025 E IFD0171
+3,Física 2 Experimental,IFD0177,4,MAT0025 E IFD0171 E IFD0173
+3,Sinais e Sistemas em Tempo Contínuo,ENE0067,4,MAT0026 E MAT0031
+3,Introdução aos Circuitos Elétricos,ENE0066,2,MAT0026 E MAT0031
+3,Mecânica 1,ENM0120,4,MAT0026 E MAT0031 E IFD0171
+3,Introdução à Ciência dos Materiais,ENM0126,3,IQD0125 E IQD0126
+4,Cálculo Numérico,MAT0053,4,MAT0026
+4,Física 3,IFD0179,4,MAT0026 E IFD0175
+4,Sinais e Sistemas em Tempo Discreto,ENE0068,4,ENE0067
+4,Circuitos Elétricos,ENE0304,4,ENE0067 E ENE0066
+4,Laboratório de Circuitos Elétricos,ENE0282,2,ENE0067 E ENE0066
+4,Mecânica 2,ENM0121,4,MAT0027 E MAT0031 E IFD0171
+4,Mecânica dos Materiais 1,ENM0164,4,ENM0120
+5,Eletrônica,ENE0045,4,IFD0179 E ENE0304 E ENE0282
+5,Laboratório de Eletrônica,ENE0046,2,IFD0179 E ENE0304 E ENE0282
+5,Conversão de Energia e Máquinas Elétricas,ENE0469,4,IFD0179 E ENE0304
+5,Transporte de Calor e Massa,ENM0128,4,MAT0027 E IFD0175 E IFD0177
+5,Tecnologia de Fabricação 1,ENM0127,3,ENM0164
+5,Circuitos Lógicos,CIC0229,4,CIC0004
+5,Laboratório de Circuitos Lógicos,CIC0231,2,CIC0004
+6,Controle de Sistemas Dinâmicos,ENE0077,4,IFD0179 E ENE0304 E ENE0282
+6,Laboratório de Conversão Eletromecânica de Energia,ENE0048,2,IFD0179 E ENE0304 E ENE0282
+6,Sistemas Hidráulicos e Pneumáticos,ENM0084,4,IFD0179 E ENE0304
+6,Tecnologias de Comando Numérico,ENM0027,4,MAT0027 E IFD0175 E IFD0177
+6,Organização e Arquitetura de Computadores,CIC0099,3,ENM0164
+6,Atividade de Extensão 1,FTD0019,4,CIC0004
+7,Controle no Espaço de Estados,ENE0079,4,ENE0077
+7,Laboratório de Controle de Sistemas Dinâmicos,ENE0078,2,ENE0077
+7,Projeto Integrador de Tecnologias,ENE0438,4,ENM0128
+7,Sistemas Integrados de Manufatura,ENM0134,4,ENM0027
+7,Redes de Computadores,CIC0124,4,CIC0090
+7,Prática Extensionista em Computação A,CIC0256,4,CIC0090 E CIC0099
+8,Controle Digital,ENE0167,4,ENE0068 E ENE0079
+8,Instrumentação Eletrônica e Sensores,ENE0355,4,ENE0045
+8,Modelagem e Implementação de Sistemas a Eventos Discretos,ENM0195,6,ENE0078 E CIC0124
+8,Projeto de Máquinas Controladas por Computador,ENM0289,4,EST0023
+8,Sistemas de Tempo Real,CIC0248,4,CIC0099
+8,Ciências do Ambiente,ECL0014,2,
+9,Projeto Final de Curso 1,FTD0022,2,
+10,Estágio Curricular em Engenharia Mecatrônica,FTD0015,12,
+10,Atividade de Extensão 2,FTD0020,4,FTD0019
+10,Projeto Final de Curso 2,FTD0023,6,FTD0022
