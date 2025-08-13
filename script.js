@@ -52,7 +52,7 @@ function initializeGraph(DATA) {
   const width = () => svg.node().clientWidth;
   const height = () => svg.node().clientHeight;
 
-  const gRoot = svg.append('g');
+  const gRoot = svg.append('g').attr('transform', `translate(${width() / 2}, ${height() / 2})`);
   const gLinks = gRoot.append('g').attr('class','links');
   const gArrowheads = gRoot.append('g').attr('class', 'arrowheads');
   const gNodes = gRoot.append('g').attr('class','nodes');
