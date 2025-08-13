@@ -159,16 +159,9 @@ const labels = gLabels.selectAll('text').data(DATA.nodes).join('text')
 sim.on('tick', ticked);
 
 function ticked(){
-link.attr('d', d=> linkArc(d));
+link.attr('d', d => `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`);
 node.attr('transform', d=> `translate(${d.x},${d.y})`);
 labels.attr('x', d=>d.x).attr('y', d=>d.y-16);
-}
-
-function linkArc(d){
-// draw a small curved arc for nicer readability
-const dx = (d.target.x - d.source.x), dy = (d.target.y - d.source.y);
-const dr = Math.sqrt(dx*dx + dy*dy) * 0.35; // radius
-return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
 }
 
 function createArrows(){
