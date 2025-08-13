@@ -1,57 +1,57 @@
 semester,name,id,credits,prerequisites,area
 1,Cálculo 1,MAT0025,6,,Core Math
 1,Introdução à Álgebra Linear,MAT0031,4,,Core Math
-1,Algoritmos e Programação de Computadores,CIC0004,6,,Core Math
+1,Algoritmos e Programação de Computadores,CIC0004,6,,Computação
 1,Química Geral Teórica,IQD0125,4,,Core Math
 1,Química Geral Experimental,IQD0126,2,,Core Math
-1,Introdução à Engenharia Mecatrônica,FTD0021,2,,Core Math
+1,Introdução à Engenharia Mecatrônica,FTD0021,2,,Outro
 2,Cálculo 2,MAT0026,6,MAT0025,Core Math
-2,Física 1,IFD0171,4,,Core Math
-2,Física 1 Experimental,IFD0173,2,,Core Math
-2,Probabilidade e Estatística,EST0023,4,MAT0025,Core Math
-2,Desenho Mecânico para Engenharia,ENM0190,4,,Core Math
-2,Estruturas de Dados,CIC0090,4,CIC0004,Core Math
-2,Impactos Sociais da Tecnologia,FTD0018,2,,Core Math
+2,Física 1,IFD0171,4,,Física
+2,Física 1 Experimental,IFD0173,2,,Física
+2,Probabilidade e Estatística,EST0023,4,MAT0025,Outro
+2,Desenho Mecânico para Engenharia,ENM0190,4,,Mecânica
+2,Estruturas de Dados,CIC0090,4,CIC0004,Computação
+2,Impactos Sociais da Tecnologia,FTD0018,2,,Outro
 3,Cálculo 3,MAT0027,6,MAT0026,Core Math
-3,Física 2,IFD0175,4,"MAT0025,IFD0171",Core Math
-3,Física 2 Experimental,IFD0177,4,"MAT0025,IFD0171,IFD0173",Core Math
-3,Sinais e Sistemas em Tempo Contínuo,ENE0067,4,"MAT0026,MAT0031",Core Math
-3,Introdução aos Circuitos Elétricos,ENE0066,2,"MAT0026,MAT0031",Core Math
-3,Mecânica 1,ENM0120,4,"MAT0026,MAT0031,IFD0171",Core Math
-3,Introdução à Ciência dos Materiais,ENM0126,3,"IQD0125,IQD0126",Core Math
+3,Física 2,IFD0175,4,"MAT0025,IFD0171",Física
+3,Física 2 Experimental,IFD0177,4,"MAT0025,IFD0171,IFD0173",Física
+3,Sinais e Sistemas em Tempo Contínuo,ENE0067,4,"MAT0026,MAT0031",Elétrica
+3,Introdução aos Circuitos Elétricos,ENE0066,2,"MAT0026,MAT0031",Elétrica
+3,Mecânica 1,ENM0120,4,"MAT0026,MAT0031,IFD0171",Mecânica
+3,Introdução à Ciência dos Materiais,ENM0126,3,"IQD0125,IQD0126",Mecânica
 4,Cálculo Numérico,MAT0053,4,MAT0026,Core Math
-4,Física 3,IFD0179,4,"MAT0026,IFD0175",Core Math
-4,Sinais e Sistemas em Tempo Discreto,ENE0068,4,ENE0067,Core Math
-4,Circuitos Elétricos,ENE0304,4,"ENE0067,ENE0066",Core Math
-4,Laboratório de Circuitos Elétricos,ENE0282,2,"ENE0067,ENE0066",Core Math
-4,Mecânica 2,ENM0121,4,"MAT0027,MAT0031,IFD0171",Core Math
-4,Mecânica dos Materiais 1,ENM0164,4,ENM0120,Core Math
-5,Eletrônica,ENE0045,4,"IFD0179,ENE0304,ENE0282",Core Math
-5,Laboratório de Eletrônica,ENE0046,2,"IFD0179,ENE0304,ENE0282",Core Math
-5,Conversão de Energia e Máquinas Elétricas,ENE0469,4,"IFD0179,ENE0304",Core Math
-5,Transporte de Calor e Massa,ENM0128,4,"MAT0027,IFD0175,IFD0177",Core Math
-5,Tecnologia de Fabricação 1,ENM0127,3,ENM0164,Core Math
-5,Circuitos Lógicos,CIC0229,4,CIC0004,Core Math
-5,Laboratório de Circuitos Lógicos,CIC0231,2,CIC0004,Core Math
-6,Controle de Sistemas Dinâmicos,ENE0077,4,"ENE0304,ENE0282",Core Math
-6,Laboratório de Conversão Eletromecânica de Energia,ENE0048,2,ENE0469,Core Math
-6,Sistemas Hidráulicos e Pneumáticos,ENM0084,4,ENM0128,Core Math
-6,Tecnologias de Comando Numérico,ENM0027,4,ENM0127,Core Math
-6,Organização e Arquitetura de Computadores,CIC0099,3,"CIC0229,CIC0231",Core Math
-6,Atividade de Extensão 1,FTD0019,4,FTD0018,Core Math
-7,Controle no Espaço de Estados,ENE0079,4,ENE0077,Core Math
-7,Laboratório de Controle de Sistemas Dinâmicos,ENE0078,2,ENE0077,Core Math
-7,Projeto Integrador de Tecnologias,ENE0438,4,ENE0045,Core Math
-7,Sistemas Integrados de Manufatura,ENM0134,4,ENM0027,Core Math
-7,Redes de Computadores,CIC0124,4,CIC0090,Core Math
-7,Prática Extensionista em Computação A,CIC0256,4,,Core Math
-8,Controle Digital,ENE0167,4,"ENE0068,ENE0079",Core Math
-8,Instrumentação Eletrônica e Sensores,ENE0355,4,ENE0045,Core Math
-8,Modelagem e Implementação de Sistemas a Eventos Discretos,ENM0195,6,"ENE0078,CIC0124",Core Math
-8,Projeto de Máquinas Controladas por Computador,ENM0289,4,"ENE0077,ENM0121,ENM0164",Core Math
-8,Sistemas de Tempo Real,CIC0248,4,CIC0099,Core Math
-8,Ciências do Ambiente,ECL0014,2,,Core Math
-9,Projeto Final de Curso 1,FTD0022,2,,Core Math
-9,Estágio Curricular em Engenharia Mecatrônica,FTD0015,12,,Core Math
-9,Atividade de Extensão 2,FTD0020,4,FTD0019,Core Math
-10,Projeto Final de Curso 2,FTD0023,6,FTD0022,Core Math
+4,Física 3,IFD0179,4,"MAT0026,IFD0175",Física
+4,Sinais e Sistemas em Tempo Discreto,ENE0068,4,ENE0067,Elétrica
+4,Circuitos Elétricos,ENE0304,4,"ENE0067,ENE0066",Elétrica
+4,Laboratório de Circuitos Elétricos,ENE0282,2,"ENE0067,ENE0066",Elétrica
+4,Mecânica 2,ENM0121,4,"MAT0027,MAT0031,IFD0171",Mecânica
+4,Mecânica dos Materiais 1,ENM0164,4,ENM0120,Mecânica
+5,Eletrônica,ENE0045,4,"IFD0179,ENE0304,ENE0282",Elétrica
+5,Laboratório de Eletrônica,ENE0046,2,"IFD0179,ENE0304,ENE0282",Elétrica
+5,Conversão de Energia e Máquinas Elétricas,ENE0469,4,"IFD0179,ENE0304",Elétrica
+5,Transporte de Calor e Massa,ENM0128,4,"MAT0027,IFD0175,IFD0177",Mecânica
+5,Tecnologia de Fabricação 1,ENM0127,3,ENM0164,Mecânica
+5,Circuitos Lógicos,CIC0229,4,CIC0004,Computação
+5,Laboratório de Circuitos Lógicos,CIC0231,2,CIC0004,Computação
+6,Controle de Sistemas Dinâmicos,ENE0077,4,"ENE0304,ENE0282",Elétrica
+6,Laboratório de Conversão Eletromecânica de Energia,ENE0048,2,ENE0469,Elétrica
+6,Sistemas Hidráulicos e Pneumáticos,ENM0084,4,ENM0128,Mecânica
+6,Tecnologias de Comando Numérico,ENM0027,4,ENM0127,Mecânica
+6,Organização e Arquitetura de Computadores,CIC0099,3,"CIC0229,CIC0231",Computação
+6,Atividade de Extensão 1,FTD0019,4,FTD0018,Outro
+7,Controle no Espaço de Estados,ENE0079,4,ENE0077,Elétrica
+7,Laboratório de Controle de Sistemas Dinâmicos,ENE0078,2,ENE0077,Elétrica
+7,Projeto Integrador de Tecnologias,ENE0438,4,ENE0045,Elétrica
+7,Sistemas Integrados de Manufatura,ENM0134,4,ENM0027,Mecânica
+7,Redes de Computadores,CIC0124,4,CIC0090,Computação
+7,Prática Extensionista em Computação A,CIC0256,4,,Computação
+8,Controle Digital,ENE0167,4,"ENE0068,ENE0079",Elétrica
+8,Instrumentação Eletrônica e Sensores,ENE0355,4,ENE0045,Elétrica
+8,Modelagem e Implementação de Sistemas a Eventos Discretos,ENM0195,6,"ENE0078,CIC0124",Mecânica
+8,Projeto de Máquinas Controladas por Computador,ENM0289,4,"ENE0077,ENM0121,ENM0164",Mecânica
+8,Sistemas de Tempo Real,CIC0248,4,CIC0099,Computação
+8,Ciências do Ambiente,ECL0014,2,,Outro
+9,Projeto Final de Curso 1,FTD0022,2,,Outro
+9,Estágio Curricular em Engenharia Mecatrônica,FTD0015,12,,Outro
+9,Atividade de Extensão 2,FTD0020,4,FTD0019,Outro
+10,Projeto Final de Curso 2,FTD0023,6,FTD0022,Outro

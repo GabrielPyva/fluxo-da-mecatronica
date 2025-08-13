@@ -66,8 +66,8 @@ function initializeGraph(DATA) {
   const tooltip = d3.select('#tooltip');
 
   const color = d3.scaleOrdinal()
-    .domain(['Core Math','Physics','Programming','Electrical','Mechanics','Labs','Other'])
-    .range(['#a0b7ff','#9ce1ff','#a2f2c3','#ffd08a','#f49fbf','#c1b4ff','#c2d0ff']);
+    .domain(['Core Math','Física','Computação','Elétrica','Mecânica','Outro'])
+    .range(['#00ff37ff','#ffc400ff','#00ccffff','#c000faff','#ff0000ff','#e4eaffff']);
 
   // Build indices and degrees
   const idToNode = new Map(DATA.nodes.map(d=>[d.id, d]));
