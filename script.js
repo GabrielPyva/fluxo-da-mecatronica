@@ -215,6 +215,15 @@ function initializeGraph(DATA) {
     }
   }
 
+  node.on('click', (ev, d) => {
+    // Define o nó clicado como o "foco"
+    focusedId = d.id;
+    // Define o tipo de filtro para "vizinhos" como padrão
+    lastFilter.type = 'neighbors'; 
+    // Executa a função para destacar os vizinhos
+    highlightNeighbors(d.id);
+  });
+
   // Controles
   // ===============================================
 
