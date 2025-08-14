@@ -83,6 +83,7 @@ function initializeGraph(DATA) {
     .force('collide', d3.forceCollide(30));
 
   let isOrganized = false; // Variável para controlar o estado do grid
+  let lastFilter = { type: null };
 
   // Zoom/pan
   svg.call(d3.zoom().scaleExtent([.25, 3]).on('zoom', (ev)=>{
@@ -221,7 +222,8 @@ function initializeGraph(DATA) {
 
   function resetView(){
     isOrganized = false; // Garante que o modo grid seja desativado
-
+    focusedId = null;
+    lastFilter.type = null;
     // Libera todos os nós da posição fixa
     DATA.nodes.forEach(d => {
         d.fx = null;
@@ -280,16 +282,27 @@ function initializeGraph(DATA) {
 
   const depthInput = d3.select('#depth');
   const depthVal = d3.select('#depthVal');
-  depthInput.on('input', function(){ depthVal.text(this.value); });
+  depthInput.on('input', function(){
+    depthVal.text(this.value); // Mantém a atualização do texto
+
+    // Se houver um nó focado e um filtro ativo, re-aplica o filtro
+    if (focusedId && lastFilter.type) {
+      showChain(focusedId, lastFilter.type, +this.value);
+    }
+  });
 
   d3.select('#btn-neighbors').on('click', ()=>{
     if(!focusedId) return; showNeighbors(focusedId);
   });
   d3.select('#btn-prereq').on('click', ()=>{
-    if(!focusedId) return; showChain(focusedId, 'up', +depthInput.property('value'));
+    if(!focusedId) return;
+    lastFilter.type = 'up'; // Lembra que o último filtro foi de pré-requisitos
+    showChain(focusedId, 'up', +depthInput.property('value'));
   });
   d3.select('#btn-depend').on('click', ()=>{
-    if(!focusedId) return; showChain(focusedId, 'down', +depthInput.property('value'));
+    if(!focusedId) return;
+    lastFilter.type = 'down'; // Lembra que o último filtro foi de dependentes
+    showChain(focusedId, 'down', +depthInput.property('value'));
   });
   d3.select('#btn-showAll').on('click', ()=>{ focusedId=null; resetView(); });
 
