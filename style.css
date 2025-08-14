@@ -54,7 +54,7 @@
     input[type="range"]{ width:100%; }
 
     .toggle{ display:flex; gap:8px; align-items:center; }
-    .toggle input{ width: 36px; height: 18px; appearance: none; background: #11173b; border-radius: 999px; position: relative; outline: none; border:1px solid rgba(255,255,255,.14); cursor:pointer; }
+    .toggle input{ width: 36px; height: 18px; appearance: none; background: #11173b; border-radius: 999px; position: relative; outline: none; border:1px solid rgba(255,255,255,.14); cursor:pointer; flex-shrink: 0;}
     .toggle input::after{ content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; background:#fff; border-radius:50%; transition: transform .18s ease; }
     .toggle input:checked{ background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); }
     .toggle input:checked::after{ transform: translateX(18px); }
@@ -75,3 +75,46 @@
     .note{ font-size: 11px; color: var(--muted); line-height: 1.35; }
 
     .footer{ font-size: 11px; color: var(--muted); text-align:center; margin-top:6px; }
+
+    /* --- Estilos para o Painel Retrátil --- */
+
+/* Animação suave para o grid do body */
+body {
+  transition: grid-template-columns 0.35s ease-in-out;
+}
+
+/* Quando o painel estiver recolhido, a primeira coluna do grid (o painel) terá largura 0 */
+body.sidebar-collapsed {
+  grid-template-columns: 0 1fr;
+}
+
+/* Esconde o conteúdo do painel lateral para que ele não "vaze" durante a animação */
+aside {
+  overflow: hidden;
+}
+
+/* Posicionamento e estilo do novo botão de recolher */
+#btn-collapse {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  padding: 6px;
+  background: var(--panel);
+}
+
+/* Animação de rotação para o ícone do botão */
+#btn-collapse svg {
+  transition: transform 0.35s ease-in-out;
+}
+
+/* Gira o ícone em 180 graus quando o painel estiver recolhido */
+body.sidebar-collapsed #btn-collapse svg {
+  transform: rotate(180deg);
+}
+
+body.sidebar-collapsed aside {
+  padding-left: 0;
+  padding-right: 0;
+  border-right-width: 0;
+}

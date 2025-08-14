@@ -216,6 +216,10 @@ function initializeGraph(DATA) {
           });
       }
   });
+  // Controle para recolher/expandir o painel lateral
+  d3.select('#btn-collapse').on('click', () => {
+    document.body.classList.toggle('sidebar-collapsed');
+  });
 
 
   // ===================================
