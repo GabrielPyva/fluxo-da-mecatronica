@@ -84,6 +84,7 @@ function initializeGraph(DATA) {
 
   let isOrganized = false; // Variável para controlar o estado do grid
   let lastFilter = { type: null };
+  let currentlyVisibleIds = new Set();
 
   // Zoom/pan
   svg.call(d3.zoom().scaleExtent([.25, 3]).on('zoom', (ev)=>{
@@ -279,6 +280,17 @@ function initializeGraph(DATA) {
   d3.select('#chk-collide').on('change', function(){
     sim.force('collide', this.checked ? d3.forceCollide(22) : null).alpha(0.6).restart();
   });
+  d3.select('#chk-isolate').on('change', function() {
+    // Se houver algum filtro ativo (ou seja, se nem todos os nós estiverem visíveis)
+    if (currentlyVisibleIds.size > 0 && currentlyVisibleIds.size < DATA.nodes.length) {
+      // Re-aplica a função de opacidade usando os mesmos nós de antes.
+      // A função vai ler o novo estado "ligado/desligado" do interruptor e fazer o resto.
+      setOpacity([...currentlyVisibleIds]);
+    } else {
+      // Se nenhum filtro estiver ativo, aplica a todos os nós.
+      setOpacity(DATA.nodes.map(d => d.id));
+    }
+  });
 
   const depthInput = d3.select('#depth');
   const depthVal = d3.select('#depthVal');
@@ -304,10 +316,15 @@ function initializeGraph(DATA) {
     lastFilter.type = 'down'; // Lembra que o último filtro foi de dependentes
     showChain(focusedId, 'down', +depthInput.property('value'));
   });
-  d3.select('#btn-showAll').on('click', ()=>{ focusedId=null; resetView(); });
+  d3.select('#btn-showAll').on('click', ()=>{ 
+    focusedId=null; 
+    lastFilter.type = null;
+    setOpacity(DATA.nodes.map(d => d.id)); 
+  });
 
   // Isolate toggle: hide others vs fade
   function setOpacity(visibleIds){
+    currentlyVisibleIds = new Set(visibleIds);
     const vis = new Set(visibleIds);
     const isolate = d3.select('#chk-isolate').property('checked');
     const dur = 300;
