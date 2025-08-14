@@ -87,7 +87,8 @@ function initializeGraph(DATA) {
   // Zoom/pan
   svg.call(d3.zoom().scaleExtent([.25, 3]).on('zoom', (ev)=>{
     gRoot.attr('transform', ev.transform);
-  }));
+  }))
+  .on('dblclick.zoom', null);
 
   let showArrows = true;
 
