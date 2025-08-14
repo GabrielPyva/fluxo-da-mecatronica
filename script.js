@@ -117,6 +117,12 @@ function initializeGraph(DATA) {
     .attr('paint-order', 'stroke')
     .attr('text-anchor','middle')
     .text(d=>d.name);
+  
+  // Popula a lista de sugestões da barra de pesquisa
+  const datalist = d3.select('#course-suggestions');
+  DATA.nodes.forEach(node => {
+    datalist.append('option').attr('value', node.name);
+  });
 
   sim.on('tick', ticked);
 
@@ -226,6 +232,34 @@ function initializeGraph(DATA) {
 
   // Controles
   // ===============================================
+  // Search
+  d3.select('#btn-search').on('click', () => {
+    // Pega o valor exato do campo de pesquisa
+    const query = d3.select('#search').property('value').trim();
+    if (!query) return;
+
+    // Encontra o nó cujo nome corresponde EXATAMENTE à pesquisa (case-insensitivo)
+    const foundNode = DATA.nodes.find(n => n.name.toLowerCase() === query.toLowerCase());
+
+    if (foundNode) {
+      // Se encontrou, executa a mesma lógica de um clique, e mais um pouco:
+      focusedId = foundNode.id;       // Define o foco
+      lastFilter.type = 'neighbors';  // Define o tipo de filtro padrão
+      
+      animateFocus(foundNode);        // Centraliza a visão no nó encontrado
+      highlightNeighbors(foundNode.id); // Aplica o filtro de vizinhos
+    }
+  });
+
+  // Garante que a tecla "Enter" no campo de pesquisa acione o clique no botão
+  d3.select('#search').on('keydown', (event) => {
+    if (event.key === 'Enter') {
+      // Impede o comportamento padrão do Enter (como submeter um formulário)
+      event.preventDefault(); 
+      // Dispara o evento de clique no botão da lupa
+      d3.select('#btn-search').dispatch('click');
+    }
+  });
 
   // Botão de Organização
   d3.select('#btn-organize-sem').on('click', () => {
@@ -313,6 +347,24 @@ function initializeGraph(DATA) {
 
   // Funções de Helper
   // ===============================================
+
+  function animateFocus(target){
+    const t = d3.zoomTransform(svg.node());
+    const k = Math.min(2.2, 1.5); // Garante um zoom consistente
+    
+    // Calcula a translação necessária para centralizar o nó 'target'
+    const x = width() / 2 - target.x * k;
+    const y = height() / 2 - target.y * k;
+
+    // Cria a nova transformação de zoom/pan
+    const newTransform = d3.zoomIdentity.translate(x, y).scale(k);
+    
+    // Aplica a transformação com uma animação suave
+    svg.transition()
+        .duration(750)
+        .ease(d3.easeCubicOut)
+        .call(d3.zoom().transform, newTransform);
+  }
 
   function setOpacity(visibleIds){
     currentlyVisibleIds = new Set(visibleIds);
