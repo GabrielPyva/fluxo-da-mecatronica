@@ -55,3 +55,24 @@ semester,name,id,credits,prerequisites,area
 9,Estágio Curricular em Engenharia Mecatrônica,FTD0015,12,,Outro
 9,Atividade de Extensão 2,FTD0020,4,FTD0019,Outro
 10,Projeto Final de Curso 2,FTD0023,6,FTD0022,Outro
+0,Introdução à Administração,ADM0023,4,,Outro
+0,Tópicos Avançados em Computadores,CIC0087,4,,Computação
+0,Software Básico,CIC0104,4,"CIC0090,CIC0099",Computação
+0,Introdução aos Sistemas Embarcados,CIC0130,4,CIC0099,Computação
+0,Introdução à Inteligência Artificial,CIC0135,4,CIC0090,Computação
+0,Princípios de Visão Computacional,CIC0195,4,CIC0090,Computação
+0,Técnicas de Programação 1,CIC0197,4,CIC0090,Computação
+0,Fundamentos Computacionais de Robótica,CIC0233,4,CIC0090,Computação
+0,Introdução à Economia,ECO0019,4,,Outro
+0,Inteligência Computacional,ENE0154,4,"ENE0077,ENE0078",Elétrica
+0,Identificação de Sistemas Dinâmicos,ENE0260,4,"ENE0077,ENE0078",Elétrica
+0,Eletrônica de Potência,ENE0326,4,"ENE0045,ENE0046,ENE0469",Elétrica
+0,Tópicos em Controle e Automação,ENE0328,4,ENE0077,Elétrica
+0,Princípios de Controle de Robôs,ENE0345,4,ENE0077,Elétrica
+0,Tópicos Especiais em Engenharia Mecatrônica,ENM0066,4,ENM0195,Mecânica
+0,Segurança em Sistemas de Controle e Automação,ENM0119,4,"ENM0134,ENE0355",Mecânica
+0,Robótica Industrial 1,ENM0168,4,ENM0120,Mecânica
+0,Sistemas Reconfiguráveis para Automação,ENM0178,4,"CIC0229,CIC0231",Mecânica
+0,Noções de Direito,FDD0155,4,,Outro
+0,Língua de Sinais Brasileira - Básico,LIP0174,4,,Outro
+0,Introdução à Sociologia,SOL0042,4,,Outro
