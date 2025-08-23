@@ -255,7 +255,6 @@ function initializeGraph(DATA) {
     lastFilter.type = null;
 
     DATA.nodes.forEach(d => { d.fx = null; d.fy = null; });
-    sim.alpha(1).restart();
 
     const t = d3.zoomIdentity.translate(0, 0);
     svg.transition().duration(750).call(d3.zoom().transform, t);
