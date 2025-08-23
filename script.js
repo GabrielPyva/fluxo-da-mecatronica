@@ -1,3 +1,5 @@
+import { processData } from './logic.js';
+
 // Função principal que carrega os dados e inicializa o grafo
 async function setupGraph() {
   try {
@@ -11,39 +13,6 @@ async function setupGraph() {
   }
 }
 
-// Função para processar os dados do CSV e transformá-los na estrutura do grafo
-function processData(csvData) {
-  const nodes = [];
-  const links = [];
-  const nodeIds = new Set();
-
-  csvData.forEach(row => {
-    if (row.id && !nodeIds.has(row.id)) {
-      nodes.push({
-        id: row.id,
-        name: row.name,
-        semester: +row.semester,
-        area: row.area
-      });
-      nodeIds.add(row.id);
-    }
-
-    if (row.prerequisites) {
-      const prereqs = row.prerequisites.split(',');
-      prereqs.forEach(prereqId => {
-        const cleanPrereqId = prereqId.trim();
-        if (cleanPrereqId) {
-          links.push({
-            source: cleanPrereqId,
-            target: row.id
-          });
-        }
-      });
-    }
-  });
-
-  return { nodes, links };
-}
 
 // Função que contém toda a lógica para desenhar e controlar o grafo
 function initializeGraph(DATA) {
