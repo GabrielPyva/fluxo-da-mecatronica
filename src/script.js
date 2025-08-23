@@ -202,22 +202,51 @@ function initializeGraph(DATA) {
   // Controles
   // ===============================================
   // Search
-  d3.select('#btn-search').on('click', () => {
-    // Pega o valor exato do campo de pesquisa
-    const query = d3.select('#search').property('value').trim();
+  const searchInput = d3.select('#search');
+  const searchBtn = d3.select('#btn-search');
+  const clearBtn = d3.select('#btn-clear-search');
+
+  // Ação de Pesquisar (clicando na lupa ou apertando Enter)
+  function executeSearch() {
+    const query = searchInput.property('value').trim();
     if (!query) return;
 
-    // Encontra o nó cujo nome corresponde EXATAMENTE à pesquisa (case-insensitivo)
     const foundNode = DATA.nodes.find(n => n.name.toLowerCase() === query.toLowerCase());
 
     if (foundNode) {
-      // Se encontrou, executa a mesma lógica de um clique, e mais um pouco:
-      focusedId = foundNode.id;       // Define o foco
-      lastFilter.type = 'neighbors';  // Define o tipo de filtro padrão
+      focusedId = foundNode.id;
+      lastFilter.type = 'neighbors';
       
-      animateFocus(foundNode);        // Centraliza a visão no nó encontrado
-      highlightNeighbors(foundNode.id); // Aplica o filtro de vizinhos
+      animateFocus(foundNode);
+      highlightNeighbors(foundNode.id);
     }
+    
+    // Feature 1: Limpa o campo de texto após a busca
+    searchInput.property('value', '');
+    // Esconde o botão "X" novamente
+    clearBtn.style('display', 'none');
+  }
+
+  searchBtn.on('click', executeSearch);
+
+  searchInput.on('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      executeSearch();
+    }
+  });
+
+  // Feature 2: Lógica do botão de limpar "X"
+  clearBtn.on('click', () => {
+    searchInput.property('value', ''); // Limpa o texto
+    clearBtn.style('display', 'none'); // Esconde o "X"
+    searchInput.node().focus(); // Devolve o foco ao campo de texto
+  });
+
+  // Mostra ou esconde o botão "X" conforme o usuário digita
+  searchInput.on('input', function() {
+    const hasText = this.value.length > 0;
+    clearBtn.style('display', hasText ? 'block' : 'none');
   });
 
   // Garante que a tecla "Enter" no campo de pesquisa acione o clique no botão

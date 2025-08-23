@@ -118,3 +118,35 @@ body.sidebar-collapsed aside {
   padding-right: 0;
   border-right-width: 0;
 }
+
+/* --- Estilos para a Barra de Pesquisa Aprimorada --- */
+
+/* O container precisa de posicionamento relativo para conter o botão "X" */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Estilo do botão de limpar "X" */
+.btn-clear {
+  position: absolute;
+  right: 10px; /* Posição à direita do campo */
+  top: 50%;
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 20px;
+  padding: 0 4px;
+  display: none; /* Começa escondido */
+}
+
+.btn-clear:hover {
+  color: var(--text);
+}
+
+/* O campo de texto precisa de um espaçamento à direita para não passar por baixo do "X" */
+#search {
+  padding-right: 30px;
+}
