@@ -33,7 +33,7 @@ function initializeGraph(DATA) {
   const tooltip = d3.select('#tooltip');
 
   const color = d3.scaleOrdinal()
-    .domain(['Core Math','Física','Computação','Elétrica','Mecânica','Química','Outro', 'Default', 'General'])
+    .domain(['Matemática','Física','Computação','Elétrica','Mecânica','Química','Outro', 'Default', 'General'])
     .range(['#2dff61ff','#ff9100ff','#008cffff','#ae00ffff','#ff0000ff','#fffb00ff','#c2d0ff', '#aaaaaa', '#bbbbbb']);
 
   // Preenche a legenda de departamentos dinamicamente

@@ -1,25 +1,25 @@
 semester,name,id,credits,prerequisites,area
-1,Cálculo 1,MAT0025,6,,Core Math
-1,Introdução à Álgebra Linear,MAT0031,4,,Core Math
+1,Cálculo 1,MAT0025,6,,Matemática
+1,Introdução à Álgebra Linear,MAT0031,4,,Matemática
 1,Algoritmos e Programação de Computadores,CIC0004,6,,Computação
 1,Química Geral Teórica,IQD0125,4,,Química
 1,Química Geral Experimental,IQD0126,2,,Química
 1,Introdução à Engenharia Mecatrônica,FTD0021,2,,Outro
-2,Cálculo 2,MAT0026,6,MAT0025,Core Math
+2,Cálculo 2,MAT0026,6,MAT0025,Matemática
 2,Física 1,IFD0171,4,,Física
 2,Física 1 Experimental,IFD0173,2,,Física
 2,Probabilidade e Estatística,EST0023,4,MAT0025,Outro
 2,Desenho Mecânico para Engenharia,ENM0190,4,,Mecânica
 2,Estruturas de Dados,CIC0090,4,CIC0004,Computação
 2,Impactos Sociais da Tecnologia,FTD0018,2,,Outro
-3,Cálculo 3,MAT0027,6,MAT0026,Core Math
+3,Cálculo 3,MAT0027,6,MAT0026,Matemática
 3,Física 2,IFD0175,4,"MAT0025,IFD0171",Física
 3,Física 2 Experimental,IFD0177,4,"MAT0025,IFD0171,IFD0173",Física
 3,Sinais e Sistemas em Tempo Contínuo,ENE0067,4,"MAT0026,MAT0031",Elétrica
 3,Introdução aos Circuitos Elétricos,ENE0066,2,"MAT0026,MAT0031",Elétrica
 3,Mecânica 1,ENM0120,4,"MAT0026,MAT0031,IFD0171",Mecânica
 3,Introdução à Ciência dos Materiais,ENM0126,3,"IQD0125,IQD0126",Mecânica
-4,Cálculo Numérico,MAT0053,4,MAT0026,Core Math
+4,Cálculo Numérico,MAT0053,4,MAT0026,Matemática
 4,Física 3,IFD0179,4,"MAT0026,IFD0175",Física
 4,Sinais e Sistemas em Tempo Discreto,ENE0068,4,ENE0067,Elétrica
 4,Circuitos Elétricos,ENE0304,4,"ENE0067,ENE0066",Elétrica
