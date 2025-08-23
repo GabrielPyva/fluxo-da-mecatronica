@@ -3,7 +3,7 @@ import { processData } from './logic.js';
 // Função principal que carrega os dados e inicializa o grafo
 async function setupGraph() {
   try {
-    const data = await d3.csv("grade-curricular.csv");
+    const data = await d3.csv("public/data/grade-curricular.csv");
     const DATA = processData(data);
     initializeGraph(DATA);
   } catch (error) {
