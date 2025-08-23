@@ -36,6 +36,23 @@ function initializeGraph(DATA) {
     .domain(['Core Math','Física','Computação','Elétrica','Mecânica','Química','Outro', 'Default', 'General'])
     .range(['#2dff61ff','#ff9100ff','#008cffff','#ae00ffff','#ff0000ff','#fffb00ff','#c2d0ff', '#aaaaaa', '#bbbbbb']);
 
+  // Preenche a legenda de departamentos dinamicamente
+  
+  // 1. Seleciona o container da legenda
+  const legendContainer = d3.select('.legend');
+
+  // 2. Extrai as áreas únicas dos dados, filtrando valores vazios ou nulos
+  const uniqueAreas = [...new Set(DATA.nodes.map(node => node.area).filter(area => area))];
+
+  // 3. Cria os "chips" para cada área
+  uniqueAreas.forEach(area => {
+    legendContainer.append('span')
+      .attr('class', 'chip')
+      .style('background-color', color(area)) // Pinta o fundo com a cor correspondente
+      .style('color', '#0a0f24') // Cor de texto mais escura para melhor contraste
+      .text(area);
+  });
+
   const indeg = new Map(DATA.nodes.map(d=>[d.id,0]));
   DATA.links.forEach(l=>{ indeg.set(l.target, (indeg.get(l.target)||0)+1); });
 
