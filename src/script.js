@@ -31,18 +31,17 @@ function initializeGraph(DATA) {
   const gLabels = gRoot.append('g').attr('class','labels');
 
   const tooltip = d3.select('#tooltip');
-
-  const color = d3.scaleOrdinal()
-    .domain(['Matemática','Física','Computação','Elétrica','Mecânica','Química','Outro', 'Default', 'General'])
-    .range(['#2dff61ff','#ff9100ff','#008cffff','#ae00ffff','#ff0000ff','#fffb00ff','#c2d0ff', '#aaaaaa', '#bbbbbb']);
-
-  // Preenche a legenda de departamentos dinamicamente
   
   // 1. Seleciona o container da legenda
   const legendContainer = d3.select('.legend');
-
+  
   // 2. Extrai as áreas únicas dos dados, filtrando valores vazios ou nulos
   const uniqueAreas = [...new Set(DATA.nodes.map(node => node.area).filter(area => area))];
+
+  // Preenche a legenda de departamentos dinamicamente
+  const color = d3.scaleOrdinal()
+    .domain(uniqueAreas)
+    .range(['#2dff61ff','#0059ffff','#fffb00ff','#c2d0ff','#ff9100ff','#ff0000ff','#ae00ffff','#e7b616ff','#00f7ffff','#4c00ffff']);
 
   // 3. Cria os "chips" para cada área
   uniqueAreas.forEach(area => {
