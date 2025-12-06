@@ -10,6 +10,9 @@
       --warn: #ffd166;
       --danger: #ff6b6b;
       --link: #98a8ff;
+      --history-completed: #2dabff;
+      --history-available: #66ff73;
+      --history-locked: #ff6b6b;
     }
 
     * { box-sizing: border-box; }
@@ -149,4 +152,8 @@ body.sidebar-collapsed aside {
 /* O campo de texto precisa de um espaçamento à direita para não passar por baixo do "X" */
 #search {
   padding-right: 30px;
+}
+
+.node circle {
+  transition: fill 0.4s ease, stroke 0.4s ease;
 }

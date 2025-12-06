@@ -67,6 +67,33 @@
     </div>
 
     <div class="card">
+      <div style="font-weight:700; margin-bottom:6px">Planejamento</div>
+    
+      <div class="row toggle" style="margin-top:6px">
+        <input type="checkbox" id="chk-history" />
+        <label for="chk-history">Ativar Modo Histórico</label>
+      </div>
+    
+      <div id="history-legend" style="display:none; margin-top:12px; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px;">
+        <div class="row" style="gap:6px; margin-bottom:4px">
+          <span class="chip" style="background:var(--ok); color:#0a0f24">Concluída</span>
+          <span style="font-size:11px; color:var(--muted)">Matéria cursada (Clique para alternar)</span>
+        </div>
+        <div class="row" style="gap:6px; margin-bottom:4px">
+          <span class="chip" style="background:var(--warn); color:#0a0f24">Disponível</span>
+          <span style="font-size:11px; color:var(--muted)">Pré-requisitos ok</span>
+        </div>
+        <div class="row" style="gap:6px">
+          <span class="chip" style="background:var(--danger); color:#0a0f24">Bloqueada</span>
+          <span style="font-size:11px; color:var(--muted)">Falta pré-requisito</span>
+        </div>
+        <div style="margin-top:8px; font-size:11px; color:var(--link); cursor:pointer" id="btn-save-local">
+          💾 Salvar progresso
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
       <div style="font-weight:700; margin-bottom:6px">Departamentos</div>
       <div class="legend">
       </div>

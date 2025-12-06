@@ -176,6 +176,115 @@ function initializeGraph(DATA) {
       }
   }
 
+  let isHistoryMode = false;
+  // Carrega do localStorage se existir, senão inicia vazio
+  let completedSet = new Set();
+
+  // Mapeamento rápido de dependências
+  // nodeDependencies maps ID -> Array of Prerequisite IDs
+  const nodeDependencies = new Map();
+  // nodeDependents maps ID -> Array of Dependent IDs (para desmarcar recursivamente)
+  const nodeDependents = new Map();
+
+  DATA.nodes.forEach(n => {
+    nodeDependencies.set(n.id, []);
+    nodeDependents.set(n.id, []);
+  });
+
+  DATA.links.forEach(l => {
+    // Nota: l.source e l.target podem ser objetos ou strings dependendo do estágio do D3
+    // Assumindo que após o simulation start eles viram objetos, usamos .id
+    const srcId = typeof l.source === 'object' ? l.source.id : l.source;
+    const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+
+    if (nodeDependencies.has(tgtId)) nodeDependencies.get(tgtId).push(srcId);
+    if (nodeDependents.has(srcId)) nodeDependents.get(srcId).push(tgtId);
+  });
+
+  // Função para verificar status: 'completed', 'available', 'locked'
+  function getNodeStatus(id) {
+    if (completedSet.has(id)) return 'completed';
+    
+    const prereqs = nodeDependencies.get(id) || [];
+    // Verifica se TODOS os pré-requisitos estão no set de completados
+    const allPrereqsMet = prereqs.every(pid => completedSet.has(pid));
+    
+    return allPrereqsMet ? 'available' : 'locked';
+  }
+
+  // Função para atualizar as cores baseadas no modo
+  function updateNodeColors() {
+    if (!isHistoryMode) {
+      // Modo normal: volta para as cores de área
+      node.selectAll('circle')
+        .attr('fill', d => color(d.area))
+        .attr('stroke', '#0b0f25');
+      return;
+    }
+
+    // Modo Histórico
+    node.selectAll('circle')
+      .attr('fill', d => {
+        const status = getNodeStatus(d.id);
+        if (status === 'completed') return 'var(--ok)';       // #74d99f
+        if (status === 'available') return 'var(--warn)';     // #ffd166
+        return 'var(--danger)';                               // #ff6b6b
+      })
+      .attr('stroke', d => {
+        // Destaque extra para disponíveis
+        const status = getNodeStatus(d.id);
+        return status === 'available' ? '#fff' : '#0b0f25';
+      });
+  }
+
+  // Função para alternar uma matéria
+  function toggleCourseCompletion(d) {
+    const id = d.id;
+    const status = getNodeStatus(id);
+
+    // Se já estava concluída, a lógica é DESMARCAR (e desmarcar quem depende dela)
+    if (status === 'completed') {
+      completedSet.delete(id);
+      recursivelyUncheckDependents(id);
+    } 
+    // Se estava disponível ou bloqueada, a lógica é MARCAR
+    else {
+      completedSet.add(id);
+      
+      // Se ela estava bloqueada ('locked'), significa que faltavam pré-requisitos.
+      // Então marcamos todos os pré-requisitos recursivamente agora.
+      if (status === 'locked') {
+        recursivelyCheckPrerequisites(id);
+      }
+    }
+
+    updateNodeColors();
+  }
+
+  function recursivelyUncheckDependents(parentId) {
+    const dependents = nodeDependents.get(parentId) || [];
+    dependents.forEach(depId => {
+      if (completedSet.has(depId)) {
+        completedSet.delete(depId);
+        recursivelyUncheckDependents(depId);
+      }
+    });
+  }
+
+  // Função para marcar recursivamente os pré-requisitos (upstream)
+  function recursivelyCheckPrerequisites(childId) {
+    const prereqs = nodeDependencies.get(childId) || [];
+    
+    prereqs.forEach(prereqId => {
+      // Se o pré-requisito ainda não está marcado, marcamos ele
+      if (!completedSet.has(prereqId)) {
+        completedSet.add(prereqId);
+        // E chamamos a função novamente para garantir os pré-requisitos dele também
+        recursivelyCheckPrerequisites(prereqId);
+      }
+    });
+  }
+
   // Funções de Drag & Drop
   node.call(d3.drag()
       .on('start', dragstarted)
@@ -207,12 +316,20 @@ function initializeGraph(DATA) {
   }
 
   node.on('click', (ev, d) => {
-    // Define o nó clicado como o "foco"
-    focusedId = d.id;
-    // Define o tipo de filtro para "vizinhos" como padrão
-    lastFilter.type = 'neighbors'; 
-    // Executa a função para destacar os vizinhos
-    highlightNeighbors(d.id);
+    // Se estiver em modo histórico, o clique marca/desmarca
+    if (isHistoryMode) {
+      ev.stopPropagation(); // Impede zoom/pan indesejado
+      toggleCourseCompletion(d);
+      // Opcional: Ainda queremos focar o nó? Talvez não no modo histórico.
+      // Se quiser focar:
+      // animateFocus(d);
+    } else {
+      // Modo Normal (comportamento original)
+      focusedId = d.id;
+      lastFilter.type = 'neighbors'; 
+      highlightNeighbors(d.id);
+      animateFocus(d); // Função animateFocus já existente
+    }
   });
 
   // Controles
@@ -356,6 +473,22 @@ function initializeGraph(DATA) {
     if(!focusedId) return;
     lastFilter.type = 'down';
     showChain(focusedId, 'down', +depthInput.property('value'));
+  });
+  d3.select('#chk-history').on('change', function() {
+    isHistoryMode = this.checked;
+    
+    // Toggle visibilidade das legendas
+    d3.select('#history-legend').style('display', isHistoryMode ? 'block' : 'none');
+    
+    // Oculta a legenda de departamentos quando em modo histórico (opcional, para limpar a tela)
+    d3.select('.legend').style('opacity', isHistoryMode ? 0.2 : 1);
+
+    // Se ativar o modo, reseta a opacidade de tudo para 1 (caso estivesse filtrado)
+    if (isHistoryMode) {
+      setOpacity(DATA.nodes.map(n => n.id)); // Mostra tudo
+    }
+    
+    updateNodeColors();
   });
 
   // Funções de Helper
