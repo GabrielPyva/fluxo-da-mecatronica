@@ -491,6 +491,100 @@ function initializeGraph(DATA) {
     updateNodeColors();
   });
 
+  // =======================================================
+  // LEITURA DE PDF (HISTÓRICO SIGAA) - VERSÃO V2 (LINHA POR LINHA)
+  // =======================================================
+
+  const fileInput = d3.select('#file-upload');
+  
+  fileInput.on('change', async function() {
+    const file = this.files[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Por favor, selecione um arquivo PDF.');
+      return;
+    }
+
+    try {
+      document.body.style.cursor = 'wait';
+      
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      
+      let fullText = '';
+      
+      // Extrai texto preservando as quebras de linha
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        
+        // A mágica acontece aqui: usamos hasEOL para inserir \n
+        const pageText = textContent.items.map(item => {
+            return item.str + (item.hasEOL ? '\n' : '');
+        }).join(' '); // Junta sem espaço extra pois já tratamos o \n
+        
+        fullText += pageText + '\n';
+      }
+
+      parseTranscriptAndMark(fullText);
+      
+      this.value = '';
+      document.body.style.cursor = 'default';
+      
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao ler o PDF. Verifique se é um histórico válido.');
+      document.body.style.cursor = 'default';
+    }
+  });
+
+  function parseTranscriptAndMark(text) {
+    // Separa o texto em linhas
+    const lines = text.split('\n');
+    
+    // Regex para achar códigos (Ex: CIC0004)
+    const codeRegex = /[A-Z]{3}\d{4}/; 
+    
+    // CORREÇÃO AQUI: Adicionamos \b no início e fim para garantir palavra inteira
+    // Isso evita que "disposto" acione o "DISP"
+    const statusRegex = /\b(APR|CUMP|DISP)\b/i;
+
+    let foundCount = 0;
+
+    lines.forEach(line => {
+      const normalizedLine = line.trim();
+      
+      const match = normalizedLine.match(codeRegex);
+      
+      if (match) {
+        const code = match[0];
+        
+        // Verifica se nesta MESMA linha existe um indicador de aprovação VÁLIDO
+        if (statusRegex.test(normalizedLine)) {
+          
+          const nodeExists = DATA.nodes.find(n => n.id === code);
+          
+          if (nodeExists) {
+            if (!completedSet.has(code)) {
+              completedSet.add(code);
+              recursivelyCheckPrerequisites(code);
+              foundCount++;
+            }
+          }
+        }
+      }
+    });
+
+    if (foundCount > 0) {
+      updateNodeColors();
+      alert(`Histórico processado com sucesso!\n${foundCount} novas matérias marcadas como concluídas.`);
+    } else {
+      updateNodeColors();
+      alert('Leitura finalizada. Nenhuma matéria nova foi marcada.');
+    }
+  }
+
   // Funções de Helper
   // ===============================================
 

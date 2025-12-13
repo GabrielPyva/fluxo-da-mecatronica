@@ -4,6 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fluxo da Mecatrônica</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    // Configura o worker do PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
+  <link rel="stylesheet" href="public/css/style.css">
   <link rel="icon" type="image/svg+xml" href="public/assets/Logo.svg" />
   <!-- D3 (via CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -87,8 +95,14 @@
           <span class="chip" style="background:var(--danger); color:#0a0f24">Bloqueada</span>
           <span style="font-size:11px; color:var(--muted)">Falta pré-requisito</span>
         </div>
-        <div style="margin-top:8px; font-size:11px; color:var(--link); cursor:pointer" id="btn-save-local">
-          💾 Salvar progresso
+        <div style="margin-top:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.1);">
+          <label for="file-upload" class="btn group" style="cursor:pointer; display:flex; justify-content:center; align-items:center;">
+            📄 Carregar Histórico do SIGAA (PDF)
+          </label>
+          <input type="file" id="file-upload" accept=".pdf" style="display:none" />
+          <div style="font-size:10px; color:var(--muted); margin-top:4px; text-align:center;">
+            Reconhece: APR, CUMP, DISP
+          </div>
         </div>
       </div>
     </div>
