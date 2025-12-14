@@ -179,6 +179,7 @@ function initializeGraph(DATA) {
   let isHistoryMode = false;
   // Carrega do localStorage se existir, senão inicia vazio
   let completedSet = new Set();
+  let enrolledSet = new Set();
 
   // Mapeamento rápido de dependências
   // nodeDependencies maps ID -> Array of Prerequisite IDs
@@ -204,10 +205,11 @@ function initializeGraph(DATA) {
   // Função para verificar status: 'completed', 'available', 'locked'
   function getNodeStatus(id) {
     if (completedSet.has(id)) return 'completed';
+    if (enrolledSet.has(id)) return 'enrolled';
     
     const prereqs = nodeDependencies.get(id) || [];
     // Verifica se TODOS os pré-requisitos estão no set de completados
-    const allPrereqsMet = prereqs.every(pid => completedSet.has(pid));
+    const allPrereqsMet = prereqs.every(pid => completedSet.has(pid) || enrolledSet.has(pid));
     
     return allPrereqsMet ? 'available' : 'locked';
   }
@@ -227,13 +229,14 @@ function initializeGraph(DATA) {
       .attr('fill', d => {
         const status = getNodeStatus(d.id);
         if (status === 'completed') return 'var(--ok)';       // #74d99f
+        if (status === 'enrolled') return 'var(--history-enrolled)';
         if (status === 'available') return 'var(--warn)';     // #ffd166
         return 'var(--danger)';                               // #ff6b6b
       })
       .attr('stroke', d => {
         // Destaque extra para disponíveis
         const status = getNodeStatus(d.id);
-        return status === 'available' ? '#fff' : '#0b0f25';
+        return (status === 'available' || status === 'enrolled') ? '#fff' : '#0b0f25';
       });
   }
 
@@ -242,20 +245,24 @@ function initializeGraph(DATA) {
     const id = d.id;
     const status = getNodeStatus(id);
 
-    // Se já estava concluída, a lógica é DESMARCAR (e desmarcar quem depende dela)
-    if (status === 'completed') {
+    if (status === 'locked') {
+      // Tenta marcar os pré-requisitos automaticamente se clicar no vermelho
+      enrolledSet.add(id);
+      recursivelyCheckPrerequisites(id);
+    }
+    else if (status === 'available') {
+      // Amarelo -> Vira Azul (Matriculado)
+      enrolledSet.add(id);
+    }
+    else if (status === 'enrolled') {
+      // Azul -> Vira Verde (Concluído)
+      enrolledSet.delete(id);
+      completedSet.add(id);
+    }
+    else if (status === 'completed') {
+      // Verde -> Desmarca tudo
       completedSet.delete(id);
       recursivelyUncheckDependents(id);
-    } 
-    // Se estava disponível ou bloqueada, a lógica é MARCAR
-    else {
-      completedSet.add(id);
-      
-      // Se ela estava bloqueada ('locked'), significa que faltavam pré-requisitos.
-      // Então marcamos todos os pré-requisitos recursivamente agora.
-      if (status === 'locked') {
-        recursivelyCheckPrerequisites(id);
-      }
     }
 
     updateNodeColors();
@@ -543,35 +550,43 @@ function initializeGraph(DATA) {
     // Separa o texto em linhas
     const lines = text.split('\n');
     
-    // Regex para achar códigos (Ex: CIC0004)
-    const codeRegex = /[A-Z]{3}\d{4}/; 
+    // Regex para achar códigos XXX0000
+    const codeRegex = /[A-Z]{3}\d{4}/;
     
-    // CORREÇÃO AQUI: Adicionamos \b no início e fim para garantir palavra inteira
-    // Isso evita que "disposto" acione o "DISP"
-    const statusRegex = /\b(APR|CUMP|DISP)\b/i;
+    const statusRegex = /\b(APR|CUMP|DISP|MATR)\b/i;
 
     let foundCount = 0;
 
     lines.forEach(line => {
       const normalizedLine = line.trim();
-      
       const match = normalizedLine.match(codeRegex);
       
       if (match) {
         const code = match[0];
+        const nodeExists = DATA.nodes.find(n => n.id === code);
         
-        // Verifica se nesta MESMA linha existe um indicador de aprovação VÁLIDO
-        if (statusRegex.test(normalizedLine)) {
-          
-          const nodeExists = DATA.nodes.find(n => n.id === code);
-          
-          if (nodeExists) {
-            if (!completedSet.has(code)) {
-              completedSet.add(code);
-              recursivelyCheckPrerequisites(code);
-              foundCount++;
-            }
-          }
+        if (nodeExists) {
+           // Verifica qual status está na linha
+           if (/\b(APR|CUMP|DISP)\b/i.test(normalizedLine)) {
+             // Lógica de Concluído
+             if (!completedSet.has(code)) {
+               // Se estava matriculado antes, remove de lá
+               enrolledSet.delete(code);
+               completedSet.add(code);
+               recursivelyCheckPrerequisites(code);
+               foundCount++;
+             }
+           } 
+           else if (/\bMATR\b/i.test(normalizedLine)) {
+             // Lógica de Matriculado
+             // Só marca matriculado se não estiver concluído (prioridade para concluído)
+             if (!completedSet.has(code) && !enrolledSet.has(code)) {
+               enrolledSet.add(code);
+               // IMPORTANTE: Se você está matriculado, assume-se que os pré-requisitos estão feitos!
+               recursivelyCheckPrerequisites(code); 
+               foundCount++;
+             }
+           }
         }
       }
     });

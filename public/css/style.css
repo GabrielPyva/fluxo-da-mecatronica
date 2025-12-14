@@ -13,6 +13,7 @@
       --history-completed: #2dabff;
       --history-available: #66ff73;
       --history-locked: #ff6b6b;
+      --history-enrolled: #29b6f6;
     }
 
     * { box-sizing: border-box; }
